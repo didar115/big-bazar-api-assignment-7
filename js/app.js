@@ -42,7 +42,7 @@ loadProducts();
 // show all product in UI
 const showProducts = (products) => {
 	const allProducts = products.map((pd) => pd);
-	console.log(allProducts);
+	// console.log(allProducts);
 	const allProductDiv = document.getElementById("all-products");
 	allProductDiv.innerHTML = "";  			//pervios data clean when new data come from searching
 	let count = 0;                 			// product counting, how many product is found from onload and search load
