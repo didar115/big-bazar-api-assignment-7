@@ -1,25 +1,25 @@
-// Modal content clear id 
+// Modal content clear id
 const clearTitle = document.getElementById("exampleModalLabel");
 const clearImg = document.getElementById("modal-img");
 
 // in modal hidden 'add to cart' button functionality for 'buy now' button
 const hiddenCart = document.getElementById("hidden-cart");
 hiddenCart.classList.remove("d-none");
-// end 
+// end
 
-
-// search by catagory section 
-const searchFieldData = document.getElementById("search-btn").addEventListener("click", () => {
+// search by catagory section
+const searchFieldData = document
+	.getElementById("search-btn")
+	.addEventListener("click", () => {
 		const get = document.getElementById("input-field");
 		const getData = get.value;
 		get.value = "";
 		loadProducts(getData, true);
 	});
 
-
-// function call load all api product section 
+// function call load all api product section
 const loadProducts = (data, check) => {
-	// 'check' is a boolean type data. when product load from search catagoty that time check == true 
+	// 'check' is a boolean type data. when product load from search catagoty that time check == true
 
 	if (check === true) {
 		const url = `https://fakestoreapi.com/products/category/${data}`;
@@ -27,7 +27,7 @@ const loadProducts = (data, check) => {
 			.then((res) => res.json())
 			.then((json) => showProducts(json));
 	} else {
-		// loadProducts function call onloading 
+		// loadProducts function call onloading
 		const url = `https://fakestoreapi.com/products`;
 		fetch(url)
 			.then((response) => response.json())
@@ -36,22 +36,19 @@ const loadProducts = (data, check) => {
 };
 loadProducts();
 
-
-
-
 // show all product in UI
 const showProducts = (products) => {
 	const allProducts = products.map((pd) => pd);
 	// console.log(allProducts);
 	const allProductDiv = document.getElementById("all-products");
-	allProductDiv.innerHTML = "";  			//pervios data clean when new data come from searching
-	let count = 0;                 			// product counting, how many product is found from onload and search load
+	allProductDiv.innerHTML = ""; //pervios data clean when new data come from searching
+	let count = 0; // product counting, how many product is found from onload and search load
 
 	for (const product of allProducts) {
 		count++;
 		const image = product.image;
 		const rating = product.rating;
-		const starRating = doStarRating(rating.rate);  // function call for creating dynamic rating star
+		const starRating = doStarRating(rating.rate); // function call for creating dynamic rating star
 		const div = document.createElement("div");
 		div.classList.add("product");
 		div.innerHTML = `
@@ -93,19 +90,16 @@ const showProducts = (products) => {
 // dynamics star rating function
 const doStarRating = (rate) => {
 	// console.log("rate", rate);
-	let rating = '';
+	let rating = "";
 	let i = 0;
 	while (i < Math.round(rate)) {
 		rating += `<i class="bi bi-star-fill text-warning"></i>`;
 		i++;
 	}
 	return rating;
-
 };
 
-
-
-// single product details function called from 'view details' button 
+// single product details function called from 'view details' button
 const loadSingleProductsDetails = (id) => {
 	const url = `https://fakestoreapi.com/products/${id}`;
 	fetch(url)
@@ -113,23 +107,14 @@ const loadSingleProductsDetails = (id) => {
 		.then((data) => displayModal(data));
 };
 
-
-//single product details view in modal section 
+//single product details view in modal section
 const displayModal = (data) => {
-
-	console.log("data id ", data);
 	hiddenCart.classList.remove("d-none");
 
 	const title = document.getElementById("exampleModalLabel");
 	title.innerText = data.title;
 	const imgAdd = document.getElementById("modal-img");
-	const addCart = document
-		.getElementById("addCartFromModal")
-		.addEventListener("click", () => {
-			addToCart(data.id, data.price);
-			clearTitle.innerText = "";
-			clearImg.innerText = "";
-		});
+
 	imgAdd.innerHTML = `
   	<div class="row">
    		<div class="col"><img  style="height:200px;" src="${data.image}" alt="" class="img-fluid"></div>
@@ -140,8 +125,14 @@ const displayModal = (data) => {
   	<h5>Rating: ${data.rating.rate}</h5>
   	<h3 class="text-danger">Price: $ ${data.price}</h3>
 `;
+	document.getElementById("addCartFromModal").addEventListener(
+		"click",
+		() => {
+			addToCart(data.id, data.price);
+		},
+		{ once: true }
+	);
 };
-
 
 // if modal section is close after that this cleanData will clear all previous history
 const clearData = () => {
@@ -149,26 +140,25 @@ const clearData = () => {
 	clearImg.innerText = "";
 };
 
+// buyNow modal functionality
+const buyNow = document
+	.getElementById("buy-now")
+	.addEventListener("click", () => {
+		const title = document.getElementById("exampleModalLabel");
+		const totalProduct = document.getElementById("total-Products");
+		const totalProductText = totalProduct.innerText;
 
-// buyNow modal functionality 
-const buyNow = document.getElementById('buy-now').addEventListener('click', () => {
+		hiddenCart.classList.add("d-none");
 
-	const title = document.getElementById("exampleModalLabel");
-	const totalProduct = document.getElementById("total-Products");
-	const totalProductText = totalProduct.innerText;
+		const totalPrice = document.getElementById("total");
+		const totalPriceText = totalPrice.innerText;
 
-	hiddenCart.classList.add("d-none");
-	
-
-	const totalPrice = document.getElementById("total");
-	const totalPriceText = totalPrice.innerText;
-	
-	title.innerHTML = `<h1>My Cart</h1>`;
-	const price = getInputValue("price");
-	const deliverCharge = getInputValue("delivery-charge");
-	const totalTax = getInputValue("total-tax");
-	const cartPriceDetails = document.getElementById("modal-img");
-	cartPriceDetails.innerHTML = `
+		title.innerHTML = `<h1>My Cart</h1>`;
+		const price = getInputValue("price");
+		const deliverCharge = getInputValue("delivery-charge");
+		const totalTax = getInputValue("total-tax");
+		const cartPriceDetails = document.getElementById("modal-img");
+		cartPriceDetails.innerHTML = `
 	<table class="table">
 							
 			<tbody>
@@ -204,23 +194,20 @@ const buyNow = document.getElementById('buy-now').addEventListener('click', () =
 	</table>
    
 `;
-	
-
-	
-	
-});
+	});
 
 let count = 0;
 const addToCart = (id, price) => {
-	count = count + 1;
-
+	const product = document.getElementById("total-Products");
+	count++;
 	updatePrice("price", price);
 
 	updateTaxAndCharge();
-	document.getElementById("total-Products").innerText = count;
+	product.innerText = count;
 	updateTotal();
+	clearTitle.innerText = "";
+	clearImg.innerText = "";
 };
-
 
 const getInputValue = (id) => {
 	const element = document.getElementById(id).innerText;
@@ -232,7 +219,6 @@ const getInputValue = (id) => {
 // main price update function
 const updatePrice = (id, value) => {
 	const convertedOldPrice = getInputValue(id);
-	console.log("old price", convertedOldPrice);
 	const convertPrice = parseFloat(value);
 	const total = convertedOldPrice + convertPrice;
 	//  document.getElementById(id).innerText = Math.round(total);
@@ -243,7 +229,6 @@ const updatePrice = (id, value) => {
 const setInnerText = (id, value) => {
 	// document.getElementById(id).innerText = Math.round(value);
 	document.getElementById(id).innerText = value;
-	console.log("value", value);
 };
 
 // update delivery charge and total Tax
@@ -268,8 +253,6 @@ const updateTaxAndCharge = () => {
 
 //grandTotal update function
 const updateTotal = () => {
-	console.log("price in ", getInputValue("price"));
-
 	const grandTotal =
 		getInputValue("price") +
 		getInputValue("delivery-charge") +
